@@ -1,8 +1,7 @@
 <table>
   <tr>
     <td valign="top">
-<pre>
-                          :
+<pre><sub>                          :
                     ;;;;::;ii;:i;;i:
                   ;;iiXAAA253355A332Xsi:
                 :isXX555A2X5h3325225h22Asi;;;
@@ -38,15 +37,14 @@ iirssis;:rsriXr;;irrirrri;;isrrirrssrrrAhhMhhhAX;
 sXXXrrsXi ii;r;;;;rrrrssiii;ii;;i;irsX2hMhh3hM;3252A55Xi;
 2rsA2s:iss;i;;r;;:rssXAXXrsrXsrsrX253MMHHMMMHH:XH222h2A535AXssirri:
 iXrisXr;:ri;::;i;::;rXAAXssrsrrirsX5525hM3hMM3irhXA2AXAXsA3AAXXAAA2A
-s;Aisssrr;sr:::;i:::;iA2AXXXAXiirrsAAA3hhhMHMA;s3XX3Xris23X2XsAAss25
-</pre>
+s;Aisssrr;sr:::;i:::;iA2AXXXAXiirrsAAA3hhhMHMA;s3XX3Xris23X2XsAAss25</sub></pre>
     </td>
     <td valign="top">
-<pre>
-fomin-n@github
+<pre><sub>fomin-n@github
 ──────────────
 Name:       Nikita Fomin
-Role:       AI / ML Engineer · Data Scientist
+Role:       AI / ML Engineer
+            Data Scientist
 Location:   Paris, France
 Focus:      Production ML · LLM applications
             AI agents · deep learning · NLP
@@ -55,25 +53,25 @@ Experience: Appodeal · inDrive
             Medialogia · Yandex
 &#8203;
 — About
-Building production ML systems, LLM applications,
-and AI agents across modeling, data pipelines,
-deployment, and monitoring.
+Building production ML systems,
+LLM applications, and AI agents across
+modeling, data pipelines, deployment,
+and monitoring.
 &#8203;
 — Technologies
 Languages:  Python · SQL
-ML / DL:    PyTorch · TensorFlow · scikit-learn
-            CatBoost
+ML / DL:    PyTorch · TensorFlow
+            scikit-learn · CatBoost
 LLM / AI:   LLMs · LangChain · LangGraph
-Data:       Spark · Databricks · Airflow · Kafka
-            Elasticsearch
+Data:       Spark · Databricks · Airflow
+            Kafka · Elasticsearch
 MLOps:      Kubeflow · MLflow
 &#8203;
 — Contact
 <a href="https://github.com/fomin-n">GitHub</a> · <a href="https://www.linkedin.com/in/n42fomin">LinkedIn</a> · <a href="https://fomin-n.github.io">Blog</a> · <a href="mailto:nikita.fomin.job@gmail.com">Email</a>
 &#8203;
 — Coding
-<a href="https://leetcode.com/u/fominnikich/">LeetCode</a> · <a href="https://www.codewars.com/users/n_fomin">Codewars</a>
-</pre>
+<a href="https://leetcode.com/u/fominnikich/">LeetCode</a> · <a href="https://www.codewars.com/users/n_fomin">Codewars</a></sub></pre>
     </td>
   </tr>
 </table>
