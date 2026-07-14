@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 from xml.sax.saxutils import escape
 
@@ -14,7 +15,7 @@ DEFAULT_PROFILE = REPO_ROOT / "profile.json"
 DEFAULT_PORTRAIT = REPO_ROOT / "assets" / "portrait.txt"
 DEFAULT_OUTPUT = REPO_ROOT / "assets" / "profile-terminal.svg"
 DEFAULT_MOBILE_OUTPUT = REPO_ROOT / "assets" / "profile-terminal-mobile.svg"
-FONT_STACK = "SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, Liberation Mono, monospace"
+FONT_STACK = "SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace"
 
 COLORS = {
     "border": "#4a4a4a",
@@ -49,7 +50,7 @@ def load_portrait(path: Path) -> list[str]:
     if not rows or len(widths) != 1:
         raise ValueError("portrait must contain equally sized rows")
     width = widths.pop()
-    if not 40 <= width <= 52 or not 30 <= len(rows) <= 40:
+    if not 36 <= width <= 44 or not 27 <= len(rows) <= 33:
         raise ValueError(f"portrait dimensions {width}×{len(rows)} are outside the supported range")
     return rows
 
@@ -59,11 +60,12 @@ def text_line(
     y: float,
     parts: list[tuple[str, str]],
     *,
-    size: float = 12.5,
+    size: float,
     weight: int = 400,
     anchor: str | None = None,
+    attributes: dict[str, str] | None = None,
 ) -> str:
-    attributes = [
+    svg_attributes = [
         f'x="{x:g}"',
         f'y="{y:g}"',
         f'font-size="{size:g}"',
@@ -71,38 +73,91 @@ def text_line(
         'xml:space="preserve"',
     ]
     if anchor:
-        attributes.append(f'text-anchor="{anchor}"')
+        svg_attributes.append(f'text-anchor="{anchor}"')
+    if attributes:
+        svg_attributes.extend(
+            f'{escape(name)}="{escape(value)}"' for name, value in attributes.items()
+        )
     spans = "".join(
         f'<tspan fill="{COLORS[color]}">{escape(value)}</tspan>' for value, color in parts
     )
-    return f"    <text {' '.join(attributes)}>{spans}</text>"
+    return f"    <text {' '.join(svg_attributes)}>{spans}</text>"
 
 
 def portrait_lines(
     rows: list[str], *, x: float, y: float, size: float, line_height: float
 ) -> list[str]:
     return [
-        text_line(x, y + index * line_height, [(row, "primary")], size=size)
+        text_line(
+            x,
+            y + index * line_height,
+            [(row, "primary")],
+            size=size,
+            attributes={"data-kind": "portrait", "data-line": str(index + 1)},
+        )
         for index, row in enumerate(rows)
     ]
 
 
-def field_line(
+def dotted_row(
+    *,
     label_x: float,
+    leader_x: float,
     value_x: float,
     y: float,
     label: str,
     value: str,
-    *,
-    value_color: str = "primary",
-    size: float = 12.5,
+    size: float,
+    section: str,
+    value_color: str,
 ) -> str:
+    """Draw one fixed-coordinate key, leader, and right-aligned value row."""
+
+    character_width = size * 0.60
+    value_start = value_x - len(value) * character_width
+    dot_count = max(1, math.floor((value_start - leader_x - character_width * 0.7) / character_width))
+    row_attributes = f'data-row="{escape(label)}" data-section="{escape(section)}"'
     return "\n".join(
         [
-            text_line(label_x, y, [(f"{label}:", "yellow")], size=size, weight=600),
-            text_line(value_x, y, [(value, value_color)], size=size),
+            f"    <g {row_attributes}>",
+            text_line(
+                label_x,
+                y,
+                [(label, "yellow")],
+                size=size,
+                weight=600,
+                attributes={"data-part": "label"},
+            ),
+            text_line(
+                leader_x,
+                y,
+                [("." * dot_count, "muted")],
+                size=size,
+                attributes={"data-part": "leader"},
+            ),
+            text_line(
+                value_x,
+                y,
+                [(value, value_color)],
+                size=size,
+                anchor="end",
+                attributes={"data-part": "value"},
+            ),
+            "    </g>",
         ]
     )
+
+
+def window_chrome(width: int, height: int, title_height: int, title_size: float) -> list[str]:
+    return [
+        f'    <rect x="1" y="1" width="{width - 2}" height="{height - 2}" rx="14" fill="{COLORS["background"]}" stroke="{COLORS["border"]}" stroke-width="2"/>',
+        f'    <path d="M15 1 H{width - 15} Q{width - 1} 1 {width - 1} 15 V{title_height} H1 V15 Q1 1 15 1 Z" fill="{COLORS["title"]}"/>',
+        f'    <path d="M1 {title_height} H{width - 1}" stroke="{COLORS["border"]}" stroke-width="1"/>',
+        '    <circle cx="25" cy="27" r="7" fill="#ff5f57"/>',
+        '    <circle cx="49" cy="27" r="7" fill="#febc2e"/>',
+        '    <circle cx="73" cy="27" r="7" fill="#28c840"/>',
+        text_line(width / 2, 35, [("~ | whoami", "muted")], size=title_size, anchor="middle"),
+    ]
 
 
 def svg_shell(width: int, height: int, title: str, description: str, body: list[str]) -> str:
@@ -123,102 +178,174 @@ def svg_shell(width: int, height: int, title: str, description: str, body: list[
 
 
 def build_desktop(profile: dict[str, object], rows: list[str]) -> str:
-    width, height = 1120, 540
+    width, height = 1200, 900
     username = str(profile["username"])
     roles = [str(value) for value in profile["roles"]]
     focus = [str(value) for value in profile["focus"]]
     contacts = [(str(label), str(value)) for label, value in profile["contacts"]]
-    content: list[str] = [
-        f'    <rect x="1" y="1" width="1118" height="538" rx="12" fill="{COLORS["background"]}" stroke="{COLORS["border"]}" stroke-width="2"/>',
-        f'    <path d="M13 1 H1107 Q1119 1 1119 13 V46 H1 V13 Q1 1 13 1 Z" fill="{COLORS["title"]}"/>',
-        f'    <path d="M1 46 H1119" stroke="{COLORS["border"]}" stroke-width="1"/>',
-        '    <circle cx="23" cy="23" r="6" fill="#ff5f57"/>',
-        '    <circle cx="43" cy="23" r="6" fill="#febc2e"/>',
-        '    <circle cx="63" cy="23" r="6" fill="#28c840"/>',
-        text_line(560, 28, [("~ | whoami", "muted")], size=12, anchor="middle"),
-        text_line(32, 75, [("^^", "orange"), (" >>> ", "muted"), ("whoami", "bright")], size=13),
-        f'    <path d="M454 92 V477" stroke="{COLORS["border"]}" stroke-width="1" opacity="0.55"/>',
-        *portrait_lines(rows, x=50, y=105, size=10.6, line_height=10.55),
-        text_line(490, 105, [(f"{username}@github", "bright")], size=15, weight=600),
-        text_line(490, 124, [("--------------", "muted")], size=12),
-        field_line(490, 592, 150, "Name", str(profile["name"])),
-        field_line(490, 592, 174, "Role", roles[0]),
-        text_line(592, 193, [(roles[1], "primary")], size=12.5),
-        field_line(490, 592, 218, "Location", str(profile["location"])),
-        field_line(490, 592, 242, "Focus", focus[0]),
-        text_line(592, 261, [(focus[1], "primary")], size=12.5),
-        text_line(490, 294, [("Contact", "bright")], size=13, weight=600),
-        text_line(490, 312, [("-------", "muted")], size=12),
+
+    label_x, leader_x, value_x = 590, 725, 1165
+    focus_parts = ["Production ML", "LLM applications", "AI agents · NLP", "deep learning"]
+    if " · ".join(focus_parts[:2]) != focus[0] or " · ".join(focus_parts[2:]) != focus[1]:
+        raise ValueError("desktop focus segmentation no longer matches profile.json")
+    profile_rows = [
+        ("Name", str(profile["name"])),
+        ("Role", roles[0]),
+        ("Role", roles[1]),
+        ("Location", str(profile["location"])),
+        *(("Focus", value) for value in focus_parts),
     ]
+    content: list[str] = [
+        *window_chrome(width, height, 54, 24),
+        text_line(34, 92, [("^^", "orange"), (" >>> ", "muted"), ("whoami", "bright")], size=26),
+        '    <path d="M555 112 V796" stroke="#4a4a4a" stroke-width="1" opacity="0.6"/>',
+        *portrait_lines(rows, x=24, y=126, size=21.5, line_height=20.45),
+        text_line(590, 130, [(f"{username}@github", "bright")], size=30, weight=600),
+        text_line(590, 158, [("PROFILE", "orange"), (" ", "muted"), ("-" * 30, "muted")], size=22),
+    ]
+    for index, (label, value) in enumerate(profile_rows):
+        content.append(
+            dotted_row(
+                label_x=label_x,
+                leader_x=leader_x,
+                value_x=value_x,
+                y=198 + index * 36,
+                label=label,
+                value=value,
+                size=25,
+                section="profile",
+                value_color="primary",
+            )
+        )
+    content.append(
+        text_line(590, 502, [("CONTACT", "orange"), (" ", "muted"), ("-" * 30, "muted")], size=22)
+    )
     for index, (label, value) in enumerate(contacts):
-        content.append(field_line(490, 592, 336 + index * 20, label, value, value_color="blue"))
+        content.append(
+            dotted_row(
+                label_x=label_x,
+                leader_x=leader_x,
+                value_x=value_x,
+                y=542 + index * 36,
+                label=label,
+                value=value,
+                size=25,
+                section="contact",
+                value_color="blue",
+            )
+        )
     content.extend(
         [
-            f'    <path d="M28 482 H1092" stroke="{COLORS["border"]}" stroke-width="1" opacity="0.55"/>',
-            text_line(32, 511, [("# ", "green"), (str(profile["statement"]), "muted")], size=10.5),
+            '    <path d="M26 810 H1174" stroke="#4a4a4a" stroke-width="1" opacity="0.6"/>',
+            text_line(
+                32,
+                844,
+                [("# ", "green"), ("Building production ML systems, LLM applications, and AI agents across", "muted")],
+                size=21.2,
+                attributes={"data-kind": "statement"},
+            ),
+            text_line(
+                58,
+                870,
+                [("modeling, data pipelines, deployment, and monitoring.", "muted")],
+                size=21.2,
+                attributes={"data-kind": "statement"},
+            ),
         ]
     )
     return svg_shell(
         width,
         height,
         "Terminal profile for Nikita Fomin",
-        "A macOS terminal window with an ASCII portrait and concise public profile information.",
+        "A macOS terminal window with an ASCII portrait and aligned public profile information.",
         content,
     )
 
 
-def build_mobile(profile: dict[str, object], rows: list[str]) -> str:
-    width, height = 600, 840
-    username = str(profile["username"])
+def mobile_profile_rows(profile: dict[str, object]) -> list[tuple[str, str]]:
     roles = [str(value) for value in profile["roles"]]
     focus = [str(value) for value in profile["focus"]]
-    contacts = [(str(label), str(value)) for label, value in profile["contacts"]]
-    portrait_size = 9.2
-    character_width = portrait_size * 0.60
-    portrait_x = (width - len(rows[0]) * character_width) / 2
-    content: list[str] = [
-        f'    <rect x="1" y="1" width="598" height="838" rx="12" fill="{COLORS["background"]}" stroke="{COLORS["border"]}" stroke-width="2"/>',
-        f'    <path d="M13 1 H587 Q599 1 599 13 V44 H1 V13 Q1 1 13 1 Z" fill="{COLORS["title"]}"/>',
-        f'    <path d="M1 44 H599" stroke="{COLORS["border"]}" stroke-width="1"/>',
-        '    <circle cx="21" cy="22" r="5.5" fill="#ff5f57"/>',
-        '    <circle cx="39" cy="22" r="5.5" fill="#febc2e"/>',
-        '    <circle cx="57" cy="22" r="5.5" fill="#28c840"/>',
-        text_line(300, 27, [("~ | whoami", "muted")], size=11.5, anchor="middle"),
-        text_line(26, 69, [("^^", "orange"), (" >>> ", "muted"), ("whoami", "bright")], size=12.5),
-        *portrait_lines(rows, x=portrait_x, y=89, size=portrait_size, line_height=9.45),
+    focus_parts = [
+        "Production ML",
+        "LLM applications",
+        "AI agents · NLP",
+        "deep learning",
     ]
-    information_y = 89 + len(rows) * 9.45 + 10
-    content.extend(
-        [
-            f'    <path d="M26 {information_y - 22:g} H574" stroke="{COLORS["border"]}" stroke-width="1" opacity="0.55"/>',
-            text_line(30, information_y, [(f"{username}@github", "bright")], size=13.5, weight=600),
-            text_line(30, information_y + 17, [("--------------", "muted")], size=11.5),
-            field_line(30, 126, information_y + 39, "Name", str(profile["name"]), size=11.8),
-            field_line(30, 126, information_y + 59, "Role", roles[0], size=11.8),
-            text_line(126, information_y + 76, [(roles[1], "primary")], size=11.8),
-            field_line(30, 126, information_y + 98, "Location", str(profile["location"]), size=11.8),
-            field_line(30, 126, information_y + 118, "Focus", focus[0], size=11.8),
-            text_line(126, information_y + 135, [(focus[1], "primary")], size=11.8),
-            text_line(30, information_y + 161, [("Contact", "bright")], size=12.2, weight=600),
-            text_line(30, information_y + 177, [("-------", "muted")], size=11.2),
-        ]
+    if " · ".join(focus_parts[:2]) != focus[0] or " · ".join(focus_parts[2:]) != focus[1]:
+        raise ValueError("mobile focus segmentation no longer matches profile.json")
+    return [
+        ("Name", str(profile["name"])),
+        ("Role", roles[0]),
+        ("Role", roles[1]),
+        ("Location", str(profile["location"])),
+        *(("Focus", value) for value in focus_parts),
+    ]
+
+
+def build_mobile(profile: dict[str, object], rows: list[str]) -> str:
+    width, height = 600, 1490
+    username = str(profile["username"])
+    contacts = [(str(label), str(value)) for label, value in profile["contacts"]]
+    row_size = 23.6
+    portrait_size = 18.5
+    portrait_width = len(rows[0]) * portrait_size * 0.60
+    portrait_x = (width - portrait_width) / 2
+    label_x, leader_x, value_x = 30, 150, 570
+
+    content: list[str] = [
+        *window_chrome(width, height, 54, 23),
+        text_line(28, 92, [("^^", "orange"), (" >>> ", "muted"), ("whoami", "bright")], size=25),
+        *portrait_lines(rows, x=portrait_x, y=122, size=portrait_size, line_height=18.5),
+        '    <path d="M28 682 H572" stroke="#4a4a4a" stroke-width="1" opacity="0.6"/>',
+        text_line(30, 724, [(f"{username}@github", "bright")], size=27, weight=600),
+        text_line(30, 754, [("PROFILE", "orange"), (" ", "muted"), ("-" * 22, "muted")], size=21),
+    ]
+    profile_rows = mobile_profile_rows(profile)
+    for index, (label, value) in enumerate(profile_rows):
+        content.append(
+            dotted_row(
+                label_x=label_x,
+                leader_x=leader_x,
+                value_x=value_x,
+                y=794 + index * 34,
+                label=label,
+                value=value,
+                size=row_size,
+                section="profile",
+                value_color="primary",
+            )
+        )
+    contact_header_y = 794 + len(profile_rows) * 34 + 22
+    content.append(
+        text_line(30, contact_header_y, [("CONTACT", "orange"), (" ", "muted"), ("-" * 22, "muted")], size=21)
     )
     for index, (label, value) in enumerate(contacts):
         content.append(
-            field_line(30, 126, information_y + 197 + index * 18, label, value, value_color="blue", size=11.2)
+            dotted_row(
+                label_x=label_x,
+                leader_x=leader_x,
+                value_x=value_x,
+                y=contact_header_y + 40 + index * 34,
+                label=label,
+                value=value,
+                size=row_size,
+                section="contact",
+                value_color="blue",
+            )
         )
     content.extend(
         [
-            f'    <path d="M26 786 H574" stroke="{COLORS["border"]}" stroke-width="1" opacity="0.55"/>',
-            text_line(30, 807, [("# ", "green"), ("Building production ML systems, LLM applications, and AI agents", "muted")], size=9.4),
-            text_line(44, 823, [("across modeling, data pipelines, deployment, and monitoring.", "muted")], size=9.4),
+            '    <path d="M28 1372 H572" stroke="#4a4a4a" stroke-width="1" opacity="0.6"/>',
+            text_line(30, 1406, [("# ", "green"), ("Building production ML systems,", "muted")], size=19, attributes={"data-kind": "statement"}),
+            text_line(52, 1433, [("LLM applications, and AI agents across modeling,", "muted")], size=19, attributes={"data-kind": "statement"}),
+            text_line(52, 1460, [("data pipelines, deployment, and monitoring.", "muted")], size=19, attributes={"data-kind": "statement"}),
         ]
     )
     return svg_shell(
         width,
         height,
         "Terminal profile for Nikita Fomin",
-        "A compact macOS terminal window with an ASCII portrait and public profile information.",
+        "A compact macOS terminal window with an ASCII portrait and aligned public profile information.",
         content,
     )
 
@@ -237,8 +364,8 @@ def main() -> None:
     args.mobile_output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(build_desktop(profile, rows), encoding="utf-8")
     args.mobile_output.write_text(build_mobile(profile, rows), encoding="utf-8")
-    print(f"wrote 1120×540 SVG to {args.output}")
-    print(f"wrote 600×840 SVG to {args.mobile_output}")
+    print(f"wrote 1200×900 SVG to {args.output}")
+    print(f"wrote 600×1490 SVG to {args.mobile_output}")
 
 
 if __name__ == "__main__":
