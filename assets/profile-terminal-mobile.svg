@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 920" width="600" height="920" role="img" aria-labelledby="title desc">
+  <title id="title">Nikita Fomin — AI and Machine Learning Engineer</title>
+  <desc id="desc">A stacked terminal profile card with an ASCII portrait and professional summary.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0f14"/>
+      <stop offset="1" stop-color="#101722"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.30"/>
+    </filter>
+  </defs>
+  <g font-family="ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, Liberation Mono, monospace">
+    <rect x="10" y="10" width="580" height="900" rx="18" fill="url(#background)" stroke="#2a3543" stroke-width="1.5" filter="url(#shadow)"/>
+    <path d="M10 58 H590" stroke="#2a3543" stroke-width="1"/>
+    <circle cx="34" cy="34" r="5" fill="#d6a06c"/>
+    <circle cx="52" cy="34" r="5" fill="#7f8b99"/>
+    <circle cx="70" cy="34" r="5" fill="#10b981"/>
+    <text x="92" y="39" fill="#9aa7b5" font-size="12" font-weight="600">fomin-n / profile</text>
+    <text x="566" y="39" fill="#667281" font-size="10" font-weight="400" text-anchor="end">AI · ML · DATA</text>
+    <rect x="24" y="72" width="552" height="336" rx="14" fill="#121820" stroke="#202b38" stroke-width="1"/>
+    <text x="166" y="87" fill="#b9c4d0" font-size="10.2" font-weight="500" letter-spacing="0.15" xml:space="preserve">
+      <tspan x="166" dy="0">...........-=++**++++++++++++-:...........</tspan>
+      <tspan x="166" dy="10.35">         :=##+==+**++++++=**+=-:          </tspan>
+      <tspan x="166" dy="10.35">.       .=+++++****+******++++*=:.       .</tspan>
+      <tspan x="166" dy="10.35">.       :=+====++=+++++****+++++=:       .</tspan>
+      <tspan x="166" dy="10.35">.      :++****#******++++++*****+=:      .</tspan>
+      <tspan x="166" dy="10.35">.     .=*#@@@#@@##**##*++==+*#####=.     .</tspan>
+      <tspan x="166" dy="10.35">.     :+@@@@@@@@@@######*++==+*#@#+.     .</tspan>
+      <tspan x="166" dy="10.35">.     :#@@@@@@@@@#****+#@***+=+*#@*:     .</tspan>
+      <tspan x="166" dy="10.35">.     -#@@@@@##**+++===+#@#**+=++*+:     .</tspan>
+      <tspan x="166" dy="10.35">.     -#@@@@#***+=======+@##*++***=:     .</tspan>
+      <tspan x="166" dy="10.35">.     :*@@##**+++==+++++=*#@##++*#=.     .</tspan>
+      <tspan x="166" dy="10.35">.     .+@@###########@#***##@#=-++:      .</tspan>
+      <tspan x="166" dy="10.35">.      :#####@##@**#***+++*+*++**=.      .</tspan>
+      <tspan x="166" dy="10.35">.      .-******#*==++++++++=++++=:       .</tspan>
+      <tspan x="166" dy="10.35">.       .-+******+==++++=======-:        .</tspan>
+      <tspan x="166" dy="10.35">.       .=+++++***+++=++====*==-:.       .</tspan>
+      <tspan x="166" dy="10.35">.      .=++*++*****+++++====@+===:.      .</tspan>
+      <tspan x="166" dy="10.35">.      :+***+++*****++=====+@+====:.     .</tspan>
+      <tspan x="166" dy="10.35">.     :+##@***++++++======-=@+-----.     .</tspan>
+      <tspan x="166" dy="10.35">.    .=***********+++++=====@=-----:.    .</tspan>
+      <tspan x="166" dy="10.35">.   .-+***#*+++****+++====+++======-:.   .</tspan>
+      <tspan x="166" dy="10.35">.  .:=****##*++++++++====-+*========-:.  .</tspan>
+      <tspan x="166" dy="10.35">. .:=++****###*++++++=====++=========-:  .</tspan>
+      <tspan x="166" dy="10.35">. :=++++++***##**++++++==++=====+=====-. .</tspan>
+      <tspan x="166" dy="10.35">..-++++++++****###****+++=======+===++=-..</tspan>
+      <tspan x="166" dy="10.35">.:=**+++++++**+**#***++========+====+++=:.</tspan>
+      <tspan x="166" dy="10.35">-=++*++++++++*+++**++++==+=====+====+**+=-</tspan>
+      <tspan x="166" dy="10.35">-+*+**++++++++++++#*++==++=====+==++++**+=</tspan>
+      <tspan x="166" dy="10.35">+==+**++++++++++++*#+++++======+==++++***+</tspan>
+      <tspan x="166" dy="10.35">+++++*+++*++++*+++*#+++*++++==++==+++*#*++</tspan>
+    </text>
+    <rect x="24" y="424" width="552" height="392" rx="14" fill="#151d27" stroke="#2a3543" stroke-width="1"/>
+    <text x="48" y="454" fill="#10b981" font-size="16" font-weight="700">$</text>
+    <text x="68" y="454" fill="#e6edf3" font-size="16" font-weight="650">nikita@github</text>
+    <text x="552" y="454" fill="#7f8b99" font-size="10.5" font-weight="400" text-anchor="end">profile</text>
+    <path d="M48 472 H552" stroke="#2a3543" stroke-width="1"/>
+    <text x="48" y="498" fill="#d6a06c" font-size="12" font-weight="600">Name</text>
+    <text x="158" y="498" fill="#e6edf3" font-size="13.2" font-weight="400">Nikita Fomin</text>
+    <text x="48" y="523" fill="#d6a06c" font-size="12" font-weight="600">Role</text>
+    <text x="158" y="523" fill="#e6edf3" font-size="13.2" font-weight="400">AI / ML Engineer</text>
+    <text x="158" y="542" fill="#e6edf3" font-size="13.2" font-weight="400">Data Scientist</text>
+    <text x="48" y="567" fill="#d6a06c" font-size="12" font-weight="600">Location</text>
+    <text x="158" y="567" fill="#e6edf3" font-size="13.2" font-weight="400">Paris, France</text>
+    <text x="48" y="592" fill="#d6a06c" font-size="12" font-weight="600">Focus</text>
+    <text x="158" y="592" fill="#e6edf3" font-size="13.2" font-weight="400">Production ML · LLM applications</text>
+    <text x="158" y="611" fill="#e6edf3" font-size="13.2" font-weight="400">AI agents · NLP · deep learning</text>
+    <text x="48" y="636" fill="#d6a06c" font-size="12" font-weight="600">Experience</text>
+    <text x="158" y="636" fill="#e6edf3" font-size="13.2" font-weight="400">Appodeal · inDrive</text>
+    <text x="158" y="655" fill="#e6edf3" font-size="13.2" font-weight="400">Yandex · Medialogia</text>
+    <path d="M48 674 H552" stroke="#2a3543" stroke-width="1"/>
+    <text x="48" y="700" fill="#d6a06c" font-size="12" font-weight="600">Languages</text>
+    <text x="158" y="700" fill="#e6edf3" font-size="13.2" font-weight="400">Python · SQL</text>
+    <text x="48" y="724" fill="#d6a06c" font-size="12" font-weight="600">ML / DL</text>
+    <text x="158" y="724" fill="#e6edf3" font-size="13.2" font-weight="400">PyTorch · scikit-learn · CatBoost</text>
+    <text x="48" y="748" fill="#d6a06c" font-size="12" font-weight="600">AI</text>
+    <text x="158" y="748" fill="#e6edf3" font-size="13.2" font-weight="400">LLMs · LangGraph · RAG · AI agents</text>
+    <text x="48" y="772" fill="#d6a06c" font-size="12" font-weight="600">Data</text>
+    <text x="158" y="772" fill="#e6edf3" font-size="13.2" font-weight="400">Spark · Databricks · Kafka</text>
+    <text x="48" y="796" fill="#d6a06c" font-size="12" font-weight="600">MLOps</text>
+    <text x="158" y="796" fill="#e6edf3" font-size="13.2" font-weight="400">MLflow · Airflow · Kubeflow</text>
+    <rect x="24" y="832" width="552" height="60" rx="10" fill="#121820" stroke="#202b38" stroke-width="1"/>
+    <text x="40" y="857" fill="#10b981" font-size="14" font-weight="700">›</text>
+    <text x="58" y="856" fill="#9aa7b5" font-size="10.4" font-weight="400">Building production ML systems, LLM applications, and AI agents</text>
+    <text x="58" y="875" fill="#9aa7b5" font-size="10.4" font-weight="400">across modeling, data pipelines, deployment, and monitoring.</text>
+  </g>
+</svg>
