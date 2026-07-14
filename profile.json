@@ -1,0 +1,23 @@
+{
+  "username": "fomin-n",
+  "name": "Nikita Fomin",
+  "roles": [
+    "AI / ML Engineer",
+    "Data Scientist"
+  ],
+  "location": "Paris, France",
+  "focus": [
+    "Production ML · LLM applications",
+    "AI agents · NLP · deep learning"
+  ],
+  "contacts": [
+    ["Email", "nikita.fomin.job@gmail.com"],
+    ["Blog", "fomin-n.github.io"],
+    ["GitHub", "github.com/fomin-n"],
+    ["LinkedIn", "linkedin.com/in/n42fomin"],
+    ["Telegram", "t.me/n_fomin"],
+    ["LeetCode", "leetcode.com/u/fominnikich"],
+    ["CodeWars", "codewars.com/users/n_fomin"]
+  ],
+  "statement": "Building production ML systems, LLM applications, and AI agents across modeling, data pipelines, deployment, and monitoring."
+}
