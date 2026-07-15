@@ -2,6 +2,6 @@
   <img
     src="./assets/profile-terminal.svg"
     alt="Terminal whoami profile for Nikita Fomin"
-    width="55%"
+    width="100%"
   />
 </p>
