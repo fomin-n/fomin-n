@@ -11,7 +11,7 @@
     <circle cx="68" cy="27" r="6.5" fill="#28c840"/>
     <text x="500" y="34" font-size="20" text-anchor="middle" xml:space="preserve"><tspan fill="#6c6c6c">~ | whoami</tspan></text>
 
-    <text x="36" y="93" font-size="24" font-weight="600" xml:space="preserve"><tspan fill="#00af87">$</tspan><tspan fill="#f2f2f2"> whoami</tspan></text>
+    <text x="36" y="93" font-size="24" font-weight="600" xml:space="preserve"><tspan fill="#ffd75f">^^</tspan><tspan fill="#00af87">&gt;&gt;&gt;</tspan><tspan fill="#f2f2f2"> whoami</tspan></text>
     <path d="M500 108 V368" stroke="#4a4a4a" stroke-width="1" opacity="0.6"/>
 
     <g data-section="profile" data-row="Name">
